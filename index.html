@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sudeep Ghosh — Artist · Coder · Accountant</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  /* ===== THEME VARIABLES ===== */
+  :root,
+  [data-theme="dark"] {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #181818;
+    --gold: #c9a84c;
+    --gold2: #e8c97a;
+    --cream: #f5f0e8;
+    --muted: #6b6b6b;
+    --border: rgba(201,168,76,0.15);
+    --text: #e8e4dc;
+    --about-text: #a09890;
+    --edu-td: #8a8480;
+    --table-row-border: rgba(255,255,255,0.04);
+    --nav-scrolled-bg: rgba(10,10,10,0.92);
+    --shadow-card: rgba(0,0,0,0.3);
+    --shadow-exp: rgba(0,0,0,0.4);
+    --noise-opacity: 0.4;
+    --hero-lines-color: rgba(201,168,76,0.04);
+    --hero-radial: rgba(201,168,76,0.06);
+  }
+
+  [data-theme="light"] {
+    --bg: #faf8f4;
+    --bg2: #f2ede4;
+    --bg3: #e8e2d8;
+    --gold: #9a6f22;
+    --gold2: #b8862a;
+    --cream: #1a1612;
+    --muted: #7a7060;
+    --border: rgba(154,111,34,0.2);
+    --text: #2a2420;
+    --about-text: #5a5248;
+    --edu-td: #6a6258;
+    --table-row-border: rgba(0,0,0,0.06);
+    --nav-scrolled-bg: rgba(250,248,244,0.95);
+    --shadow-card: rgba(0,0,0,0.1);
+    --shadow-exp: rgba(0,0,0,0.12);
+    --noise-opacity: 0.2;
+    --hero-lines-color: rgba(154,111,34,0.06);
+    --hero-radial: rgba(154,111,34,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* Custom cursor — hide on touch devices */
+  .cursor {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.5);
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: left 0.12s ease, top 0.12s ease;
+  }
+  @media (pointer: coarse) {
+    .cursor, .cursor-ring { display: none; }
+    body { cursor: auto; }
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: var(--noise-opacity);
+    transition: opacity 0.4s;
+  }
+
+  /* ===== THEME TOGGLE BUTTON ===== */
+  .theme-toggle {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 6px 14px;
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+  .theme-toggle:hover { border-color: var(--gold); color: var(--gold); }
+  .theme-toggle .theme-icon { font-size: 0.9rem; transition: transform 0.5s; }
+  .theme-toggle:hover .theme-icon { transform: rotate(20deg); }
+
+  /* ===== HAMBURGER MENU ===== */
+  .hamburger {
+    display: none;
+    flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px; background: none; border: none;
+    z-index: 1001;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--gold); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ===== MOBILE MENU OVERLAY ===== */
+  .mobile-menu {
+    display: none;
+    position: fixed; inset: 0; z-index: 950;
+    background: var(--bg2);
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 32px; padding: 40px;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .mobile-menu.open { opacity: 1; }
+  .mobile-menu a {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--text);
+    text-decoration: none; letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+  .mobile-menu .mobile-theme-row {
+    margin-top: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 900;
+    padding: 24px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid transparent;
+    transition: all 0.4s;
+    backdrop-filter: blur(0px);
+  }
+  nav.scrolled {
+    background: var(--nav-scrolled-bg);
+    border-color: var(--border);
+    backdrop-filter: blur(20px);
+    padding: 16px 60px;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: var(--gold); letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .nav-right {
+    display: flex; align-items: center; gap: 32px;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.8rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    transition: color 0.3s; font-weight: 400;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 80% at 70% 50%, var(--hero-radial) 0%, transparent 70%);
+    transition: background 0.4s;
+  }
+  .hero-lines {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 50%;
+    background: repeating-linear-gradient(
+      90deg, transparent, transparent 79px,
+      var(--hero-lines-color) 79px, var(--hero-lines-color) 80px
+    );
+    transition: background 0.4s;
+  }
+  .hero-left {
+    padding: 140px 60px 60px 60px; position: relative; z-index: 10;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--gold); font-size: 0.72rem; letter-spacing: 0.25em;
+    text-transform: uppercase; margin-bottom: 32px;
+    font-family: 'DM Mono', monospace;
+  }
+  .hero-tag::before {
+    content: ''; width: 32px; height: 1px; background: var(--gold);
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    line-height: 1.05; font-weight: 900;
+    color: var(--cream); margin-bottom: 8px;
+  }
+  .hero-name em {
+    font-style: italic; color: var(--gold);
+  }
+  .hero-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    color: var(--muted); font-style: italic;
+    margin-bottom: 48px; letter-spacing: 0.01em;
+  }
+  .hero-roles {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px;
+  }
+  .role-pill {
+    border: 1px solid var(--border);
+    padding: 6px 18px; border-radius: 50px;
+    font-size: 0.78rem; color: var(--muted); letter-spacing: 0.08em;
+    transition: all 0.3s;
+  }
+  .role-pill:hover { border-color: var(--gold); color: var(--gold); }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: var(--gold); color: #0a0a0a;
+    padding: 16px 36px; border-radius: 4px;
+    font-weight: 500; font-size: 0.85rem; letter-spacing: 0.12em;
+    text-transform: uppercase; text-decoration: none;
+    transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .hero-cta::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--gold2); transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .hero-cta:hover::before { transform: translateX(0); }
+  .hero-cta span { position: relative; z-index: 1; color: #0a0a0a; }
+  .hero-right {
+    position: relative; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    height: 100vh; padding: 140px 60px 60px 0;
+  }
+  .photo-frame {
+    position: relative; width: 400px; max-width: 90%;
+  }
+  .photo-frame::before {
+    content: '';
+    position: absolute; top: 20px; left: 20px; right: -20px; bottom: -20px;
+    border: 1px solid var(--gold); border-radius: 2px; z-index: 0;
+  }
+  .photo-frame img {
+    width: 100%; border-radius: 2px;
+    position: relative; z-index: 1;
+    filter: sepia(0.15) contrast(1.05);
+    display: block; object-fit: cover; aspect-ratio: 3/4;
+    background: var(--bg3);
+  }
+  .photo-badge {
+    position: absolute; bottom: -30px; right: -30px; z-index: 2;
+    width: 110px; height: 110px; border-radius: 50%;
+    background: var(--gold); color: #0a0a0a;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.65rem; font-style: italic; line-height: 1.4;
+    padding: 16px; font-weight: 700;
+    animation: rotate-badge 12s linear infinite;
+  }
+  @keyframes rotate-badge {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .scroll-indicator {
+    position: absolute; bottom: 40px; left: 60px;
+    display: flex; align-items: center; gap: 16px;
+    color: var(--muted); font-size: 0.7rem; letter-spacing: 0.2em;
+    text-transform: uppercase; font-family: 'DM Mono', monospace; z-index: 10;
+  }
+  .scroll-line {
+    width: 60px; height: 1px; background: var(--muted);
+    position: relative; overflow: hidden;
+  }
+  .scroll-line::after {
+    content: ''; position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%; background: var(--gold);
+    animation: scroll-anim 2s ease infinite;
+  }
+  @keyframes scroll-anim { to { left: 100%; } }
+
+  /* SECTIONS */
+  section { padding: 120px 0; position: relative; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 60px; }
+  .section-header { margin-bottom: 80px; }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; color: var(--gold); letter-spacing: 0.25em;
+    display: block; margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    color: var(--cream); font-weight: 700; line-height: 1.1;
+  }
+  .section-title em { color: var(--gold); font-style: italic; }
+  .section-line {
+    width: 60px; height: 1px; background: var(--gold); margin-top: 24px;
+  }
+
+  /* ABOUT */
+  #about { background: var(--bg); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .about-text p {
+    font-size: 1.05rem; line-height: 1.9; color: var(--about-text); margin-bottom: 24px;
+  }
+  .about-text p strong { color: var(--cream); font-weight: 500; }
+  .traits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 40px; }
+  .trait {
+    padding: 14px 20px; border: 1px solid var(--border);
+    border-radius: 2px; font-size: 0.82rem; color: var(--muted); letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 10px; transition: all 0.3s;
+  }
+  .trait:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.03); }
+  .trait::before { content: '→'; color: var(--gold); font-family: 'DM Mono', monospace; }
+  .languages-block { margin-top: 48px; }
+  .lang-title {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px; font-family: 'DM Mono', monospace;
+  }
+  .lang-list { display: flex; gap: 12px; flex-wrap: wrap; }
+  .lang-tag {
+    padding: 8px 20px; border: 1px solid var(--border);
+    border-radius: 50px; font-size: 0.82rem; color: var(--muted);
+  }
+  .lang-tag.primary { border-color: rgba(201,168,76,0.4); color: var(--gold2); }
+
+  /* EDUCATION */
+  #education { background: var(--bg2); }
+  .edu-timeline { position: relative; }
+  .edu-timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  }
+  .edu-item {
+    padding: 0 0 60px 48px; position: relative;
+    opacity: 0; animation: fadeUp 0.6s forwards;
+  }
+  .edu-item:nth-child(1) { animation-delay: 0.1s; }
+  .edu-item:nth-child(2) { animation-delay: 0.2s; }
+  .edu-item:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .edu-dot {
+    position: absolute; left: -5px; top: 8px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--gold); border: 2px solid var(--bg2);
+    box-shadow: 0 0 10px rgba(201,168,76,0.5);
+  }
+  .edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 8px;
+  }
+  .edu-degree {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: var(--cream); font-weight: 700; margin-bottom: 6px;
+  }
+  .edu-school { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
+  .edu-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.83rem; max-width: 700px;
+  }
+  .edu-table th {
+    text-align: left; padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); font-family: 'DM Mono', monospace; font-weight: 400;
+  }
+  .edu-table td {
+    padding: 10px 16px; border-bottom: 1px solid var(--table-row-border);
+    color: var(--edu-td);
+  }
+  .edu-table td:first-child { color: var(--cream); }
+  .grade-badge {
+    display: inline-block; background: rgba(201,168,76,0.1);
+    color: var(--gold2); border: 1px solid rgba(201,168,76,0.2);
+    padding: 2px 10px; border-radius: 50px; font-size: 0.78rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .dash { color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* SKILLS/CERTS */
+  #certificates { background: var(--bg); }
+  .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .cert-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; padding: 28px 24px;
+    position: relative; overflow: hidden; transition: all 0.3s;
+  }
+  .cert-card:hover {
+    border-color: rgba(201,168,76,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px var(--shadow-card);
+  }
+  .cert-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: linear-gradient(90deg, var(--gold), transparent);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+  }
+  .cert-card:hover::after { transform: scaleX(1); }
+  .cert-code {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    color: var(--gold); letter-spacing: 0.15em; margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .cert-name { font-size: 0.95rem; color: var(--cream); font-weight: 500; line-height: 1.4; margin-bottom: 16px; }
+  .cert-grade {
+    display: inline-block;
+    background: rgba(201,168,76,0.1); color: var(--gold2);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 4px 14px; border-radius: 50px;
+    font-size: 0.78rem; font-family: 'DM Mono', monospace;
+  }
+
+  /* EXPERIENCE */
+  #experience { background: var(--bg2); }
+  .exp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+  .exp-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 36px 32px;
+    transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .exp-card:hover {
+    border-color: rgba(201,168,76,0.3);
+    box-shadow: 0 20px 60px var(--shadow-exp);
+    transform: translateY(-6px);
+  }
+  .exp-type {
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); font-family: 'DM Mono', monospace; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .exp-type::before { content: ''; width: 20px; height: 1px; background: var(--gold); }
+  .exp-name { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--cream); font-weight: 700; margin-bottom: 8px; }
+  .exp-role { color: var(--muted); font-size: 0.85rem; }
+  .exp-arrow {
+    position: absolute; bottom: 28px; right: 28px;
+    color: var(--gold); font-size: 1.2rem; opacity: 0;
+    transition: opacity 0.3s, transform 0.3s; text-decoration: none;
+  }
+  .exp-card:hover .exp-arrow { opacity: 1; transform: translate(4px, -4px); }
+
+  /* ACHIEVEMENTS */
+  #achievements { background: var(--bg); }
+  .ach-list { display: grid; gap: 0; }
+  .ach-item {
+    display: grid; grid-template-columns: 80px 1fr auto;
+    gap: 0; border-bottom: 1px solid var(--border);
+    padding: 36px 0; align-items: center;
+    transition: background 0.3s; cursor: default;
+  }
+  .ach-item:first-child { border-top: 1px solid var(--border); }
+  .ach-item:hover { background: rgba(201,168,76,0.02); }
+  .ach-year {
+    font-family: 'DM Mono', monospace; font-size: 0.78rem;
+    color: var(--gold); letter-spacing: 0.1em;
+  }
+  .ach-content { padding: 0 32px; }
+  .ach-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; color: var(--cream); font-weight: 700; margin-bottom: 4px;
+  }
+  .ach-subtitle { color: var(--muted); font-size: 0.85rem; }
+  .ach-medal { font-size: 1.8rem; padding-right: 20px; }
+
+  /* CONTACT */
+  #contact { background: var(--bg2); }
+  .contact-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  }
+  .contact-text .big {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--cream); line-height: 1.15; margin-bottom: 32px;
+  }
+  .contact-text .big em { color: var(--gold); font-style: italic; }
+  .contact-text p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; }
+  .contact-btn-row { margin-top:40px; display:flex; gap:12px; flex-wrap:wrap; }
+  .btn-primary {
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--gold);color:#0a0a0a;
+    padding:14px 28px;border-radius:4px;
+    font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;
+    text-decoration:none;font-weight:500; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary {
+    display:inline-flex;align-items:center;gap:10px;
+    border:1px solid var(--border);color:var(--muted);
+    padding:14px 28px;border-radius:4px;
+    font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;
+    text-decoration:none; transition: all 0.3s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .socials-list { display: flex; flex-direction: column; gap: 0; }
+  .social-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0; border-bottom: 1px solid var(--border);
+    text-decoration: none; color: var(--muted);
+    font-size: 0.88rem; letter-spacing: 0.05em;
+    transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .social-link::before {
+    content: ''; position: absolute; left: -100%; top: 0; bottom: 0;
+    width: 100%; background: rgba(201,168,76,0.05); transition: left 0.3s;
+  }
+  .social-link:hover::before { left: 0; }
+  .social-link:hover { color: var(--gold); padding-left: 12px; }
+  .social-link span { position: relative; }
+  .social-arrow { transition: transform 0.3s; }
+  .social-link:hover .social-arrow { transform: translate(4px, -4px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg); border-top: 1px solid var(--border);
+    padding: 40px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.2rem; }
+  .footer-copy { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.05em; }
+
+  /* ANIMATED ENTRANCE */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 768px) {
+    body { cursor: auto; }
+
+    nav { padding: 18px 20px; }
+    nav.scrolled { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .nav-right { gap: 12px; }
+    .theme-toggle .theme-label { display: none; }
+    .hamburger { display: flex; }
+
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 100svh;
+      padding-bottom: 80px;
+    }
+    .hero-left {
+      padding: 110px 20px 40px;
+      text-align: left;
+    }
+    .hero-name { font-size: clamp(2.8rem, 11vw, 4rem); }
+    .hero-tagline { font-size: 1rem; margin-bottom: 32px; }
+    .hero-roles { gap: 8px; margin-bottom: 40px; }
+    .hero-right { display: none; }
+    .scroll-indicator { left: 20px; bottom: 28px; }
+
+    section { padding: 72px 0; }
+    .container { padding: 0 20px; }
+    .section-header { margin-bottom: 48px; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .traits-grid { grid-template-columns: 1fr; gap: 8px; }
+
+    /* Education table — horizontal scroll on small screens */
+    .edu-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .edu-table { min-width: 480px; }
+    .edu-item { padding: 0 0 48px 32px; }
+    .edu-timeline::before { left: 0; }
+
+    .certs-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .cert-card { padding: 20px 16px; }
+
+    .exp-grid { grid-template-columns: 1fr; gap: 16px; }
+    .exp-card { padding: 28px 24px; }
+    /* Always show arrow on mobile (no hover) */
+    .exp-arrow { opacity: 1; transform: none; }
+
+    .ach-item {
+      grid-template-columns: 60px 1fr auto;
+      padding: 24px 0;
+    }
+    .ach-content { padding: 0 16px; }
+    .ach-title { font-size: 0.95rem; }
+    .ach-medal { font-size: 1.4rem; padding-right: 8px; }
+
+    .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+    .contact-btn-row { flex-direction: column; }
+    .btn-primary, .btn-secondary { justify-content: center; }
+
+    footer {
+      flex-direction: column; gap: 16px; text-align: center;
+      padding: 28px 20px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .certs-grid { grid-template-columns: 1fr; }
+    .hero-name { font-size: 2.6rem; }
+    .ach-item { grid-template-columns: 50px 1fr; }
+    .ach-medal { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- MOBILE MENU OVERLAY -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#education" onclick="closeMobileMenu()">Education</a>
+  <a href="#certificates" onclick="closeMobileMenu()">Skills</a>
+  <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+  <a href="#achievements" onclick="closeMobileMenu()">Awards</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  <div class="mobile-theme-row">
+    <button class="theme-toggle" id="themeToggleMobile" onclick="toggleTheme()">
+      <span class="theme-icon" id="themeIconMobile">☀️</span>
+      <span id="themeLabelMobile">Light Mode</span>
+    </button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">S·G</a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#certificates">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#achievements">Awards</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span class="theme-icon" id="themeIcon">☀️</span>
+      <span class="theme-label" id="themeLabel">Light</span>
+    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-left">
+    <div class="hero-tag">Artist Enthusiastic &amp; Developer</div>
+    <h1 class="hero-name">Sudeep<br><em>Ghosh</em></h1>
+    <p class="hero-tagline">"Born to Stand Out, Not Fit In"</p>
+    <div class="hero-roles">
+      <span class="role-pill">Artist</span>
+      <span class="role-pill">Coder</span>
+      <span class="role-pill">Accountant</span>
+      <span class="role-pill">Student</span>
+      <span class="role-pill">NCC Cadet</span>
+    </div>
+    <a href="#about" class="hero-cta">
+      <span>Discover My World</span>
+      <span>→</span>
+    </a>
+  </div>
+  <div class="hero-right">
+    <div class="photo-frame">
+      <img src="passport.PNG" alt="Sudeep Ghosh" onerror="this.style.background='linear-gradient(135deg,#1a1a1a,#2a2a2a)';this.removeAttribute('src')">
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">01 / About</span>
+      <h2 class="section-title">Who I <em>Am</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm passionate about working in <strong>dynamic environments</strong> where I can apply my finance knowledge to help businesses grow, stay compliant, and make informed decisions.</p>
+        <p>I'm eager to gain hands-on experience through internships, projects, or full-time roles in the fields of <strong>accounting, finance</strong> or consulting. My career objective is to work hard and smart for an institution which provides an opportunity to enhance my qualities.</p>
+        <div class="traits-grid">
+          <div class="trait">Optimistic</div>
+          <div class="trait">Self Disciplined</div>
+          <div class="trait">Punctual</div>
+          <div class="trait">Emotionally Stable</div>
+          <div class="trait">Rule Bound</div>
+          <div class="trait">Serious</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="languages-block">
+          <p class="lang-title">Languages — Writing &amp; Speaking</p>
+          <div class="lang-list">
+            <span class="lang-tag primary">English</span>
+            <span class="lang-tag primary">Hindi</span>
+            <span class="lang-tag">Marathi (Speaking)</span>
+            <span class="lang-tag">Bengali (Speaking)</span>
+          </div>
+        </div>
+        <div style="margin-top:48px; padding:36px; background:var(--bg3); border:1px solid var(--border); border-radius:4px; transition: background 0.4s, border-color 0.4s;">
+          <p class="lang-title">Currently Pursuing</p>
+          <p style="font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--cream); margin-bottom:8px;">B.A.F. — University of Mumbai</p>
+          <p style="color:var(--muted); font-size:0.88rem;">Bachelor of Accounting &amp; Finance<br>St. Andrew's College · Sem 4 Ongoing</p>
+          <div style="margin-top:20px; display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="grade-badge">Sem 1 — 6.91</span>
+            <span class="grade-badge">Sem 2 — 7.36</span>
+            <span class="grade-badge">Sem 3 — 7.00</span>
+            <span class="grade-badge">Sem 4 — 8.27</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">02 / Education</span>
+      <h2 class="section-title">Academic <em>Journey</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="edu-timeline">
+      <div class="edu-item reveal">
+        <div class="edu-dot"></div>
+        <div class="edu-year">2022 · MSBSHSE</div>
+        <div class="edu-degree">Secondary School Certificate</div>
+        <div class="edu-school">Infant Jesus High School</div>
+        <div class="edu-table-wrap">
+        <table class="edu-table">
+          <thead><tr><th>Board</th><th>School</th><th>Grade</th><th>Year</th></tr></thead>
+          <tbody>
+            <tr><td>MSBSHSE</td><td>Infant Jesus High School</td><td><span class="grade-badge">89.00%</span></td><td>2022</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="edu-item reveal">
+        <div class="edu-dot"></div>
+        <div class="edu-year">2024 · MSBSHSE</div>
+        <div class="edu-degree">Higher School Certificate</div>
+        <div class="edu-school">Royal College — Commerce Stream</div>
+        <div class="edu-table-wrap">
+        <table class="edu-table">
+          <thead><tr><th>Stream</th><th>College</th><th>Grade</th><th>Year</th></tr></thead>
+          <tbody>
+            <tr><td>Commerce</td><td>Royal College</td><td><span class="grade-badge">84.67%</span></td><td>2024</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="edu-item reveal">
+        <div class="edu-dot"></div>
+        <div class="edu-year">2024–2027 · University of Mumbai</div>
+        <div class="edu-degree">Bachelor of Accounting &amp; Finance</div>
+        <div class="edu-school">Royal College → St. Andrew's College</div>
+        <div class="edu-table-wrap">
+        <table class="edu-table">
+          <thead><tr><th>Sem</th><th>College</th><th>SGPI</th><th>Year</th></tr></thead>
+          <tbody>
+            <tr><td>Sem 1</td><td>Royal College</td><td><span class="grade-badge">6.91</span></td><td>2024</td></tr>
+            <tr><td>Sem 2</td><td>Royal College</td><td><span class="grade-badge">7.36</span></td><td>2025</td></tr>
+            <tr><td>Sem 3</td><td>St. Andrew's</td><td><span class="grade-badge">7.00</span></td><td>2025</td></tr>
+            <tr><td>Sem 4</td><td>St. Andrew's</td><td><span class="grade-badge">8.27</span></td><td>2026</td></tr>
+            <tr><td>Sem 5</td><td>St. Andrew's</td><td><span class="dash">—</span></td><td>2026</td></tr>
+            <tr><td>Sem 6</td><td>St. Andrew's</td><td><span class="dash">—</span></td><td>2027</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATES / SKILLS -->
+<section id="certificates">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">03 / Skills &amp; Certifications</span>
+      <h2 class="section-title">Technical <em>Arsenal</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <p style="color:var(--muted); margin-bottom:48px; font-size:0.88rem; font-family:'DM Mono',monospace; letter-spacing:0.05em;">ALL INDIA COUNCIL FOR PROFESSIONAL TRAINING &amp; RESEARCH PVT. LTD, THANE</p>
+    <div class="certs-grid">
+      <div class="cert-card reveal"><div class="cert-code">CPO</div><div class="cert-name">Proficiency in PC Operation</div><span class="cert-grade">86%</span></div>
+      <div class="cert-card reveal"><div class="cert-code">PDC</div><div class="cert-name">Proficiency in Digital Computerization</div><span class="cert-grade">98%</span></div>
+      <div class="cert-card reveal"><div class="cert-code">AE</div><div class="cert-name">Certificate in Advance Excel</div><span class="cert-grade">86%</span></div>
+      <div class="cert-card reveal"><div class="cert-code">TALLY</div><div class="cert-name">Computerized Accounting with GST</div><span class="cert-grade">B Grade</span></div>
+      <div class="cert-card reveal"><div class="cert-code">PCA</div><div class="cert-name">Proficiency in C++ Programming</div><span class="cert-grade">96%</span></div>
+      <div class="cert-card reveal"><div class="cert-code">SQL</div><div class="cert-name">Certificate in SQL Server</div><span class="cert-grade">98%</span></div>
+      <div class="cert-card reveal"><div class="cert-code">PYTHON</div><div class="cert-name">Certificate in Python Language</div><span class="cert-grade">86%</span></div>
+      <div class="cert-card reveal"><div class="cert-code">JAVA</div><div class="cert-name">Certificate in Java Language</div><span class="cert-grade">96%</span></div>
+      <div class="cert-card reveal" style="border-style:dashed; border-color:rgba(201,168,76,0.25);">
+        <div class="cert-code">···</div>
+        <div class="cert-name" style="font-style:italic; color:var(--muted);">Still learning more computer languages…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">04 / Experience</span>
+      <h2 class="section-title">Professional <em>Ventures</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <div class="exp-type">Creative</div>
+        <div class="exp-name">AS Art Academy</div>
+        <div class="exp-role">Artist &amp; Educator</div>
+        <a href="https://linktr.ee/sudeepp22" target="_blank" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Media</div>
+        <div class="exp-name">OwlNest Media</div>
+        <div class="exp-role">Marketing Agency</div>
+        <a href="https://www.owlnestmedia.com" target="_blank" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Platform</div>
+        <div class="exp-name">ArtistKhojo.in</div>
+        <div class="exp-role">Artist Platform Contributor</div>
+        <a href="https://artistkhojo.in/" target="_blank" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Education</div>
+        <div class="exp-name">Master's Academy</div>
+        <div class="exp-role">Academic Associate</div>
+        <a href="#" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Education</div>
+        <div class="exp-name">Study Box Tuition</div>
+        <div class="exp-role">Educator / Tutor</div>
+        <a href="#" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Tech</div>
+        <div class="exp-name">Sushitech India</div>
+        <div class="exp-role">Web Developer + Graphics Designer + Performance Marketing</div>
+        <a href="#" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Exam</div>
+        <div class="exp-name">MAHA CET Exam</div>
+        <div class="exp-role">IT Server Manager</div>
+        <a href="#" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Gaming</div>
+        <div class="exp-name">Gaming Mannia</div>
+        <div class="exp-role">Community Member</div>
+        <a href="#" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Design</div>
+        <div class="exp-name">Aakaar 3D Studio</div>
+        <div class="exp-role">3D Designer</div>
+        <a href="#" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Exam</div>
+        <div class="exp-name">SSC EXAM</div>
+        <div class="exp-role">Registration Desk Manager</div>
+        <a href="#" class="exp-arrow">↗</a>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-type">Co-operate Event</div>
+        <div class="exp-name">Dreamcast</div>
+        <div class="exp-role">CNBC TV18</div>
+        <a href="#" class="exp-arrow">↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">05 / Achievements</span>
+      <h2 class="section-title">Awards &amp; <em>Recognition</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="ach-list">
+      <div class="ach-item reveal">
+        <div class="ach-year">2018</div>
+        <div class="ach-content">
+          <div class="ach-title">Top 10 — District Level Chess Tournament</div>
+          <div class="ach-subtitle">Strategic excellence at district level competition</div>
+        </div>
+        <div class="ach-medal">♟</div>
+      </div>
+      <div class="ach-item reveal">
+        <div class="ach-year">2025</div>
+        <div class="ach-content">
+          <div class="ach-title">Top 3 — Tata Marathon Mumbai (TCS)</div>
+          <div class="ach-subtitle">Athletic achievement in one of India's premier marathons</div>
+        </div>
+        <div class="ach-medal">🏃</div>
+      </div>
+      <div class="ach-item reveal">
+        <div class="ach-year">2025</div>
+        <div class="ach-content">
+          <div class="ach-title">Professional Designer &amp; Editor — Royal College, Mira Road</div>
+          <div class="ach-subtitle">Official creative lead for college publications and design</div>
+        </div>
+        <div class="ach-medal">🎨</div>
+      </div>
+      <div class="ach-item reveal">
+        <div class="ach-year">2025</div>
+        <div class="ach-content">
+          <div class="ach-title">Art Specialist — Kokuyo Camlin Ltd.</div>
+          <div class="ach-subtitle">Awarded the title of Art Specialist by one of India's leading art brands</div>
+        </div>
+        <div class="ach-medal">🏆</div>
+      </div>
+      <div class="ach-item reveal">
+        <div class="ach-year">2026</div>
+        <div class="ach-content">
+          <div class="ach-title">NCC B Certificate — National Cadet Corps</div>
+          <div class="ach-subtitle">Awarded NCC B Certification for discipline and national service</div>
+        </div>
+        <div class="ach-medal">🎖</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="reveal">
+        <div class="contact-text">
+          <p class="big">Let's <em>Connect</em> &amp; Create Together</p>
+          <p>Whether it's a finance opportunity, a creative collaboration, a coding project — I'm open to conversations that lead somewhere meaningful.</p>
+          <div class="contact-btn-row">
+            <a href="mailto:sudeepghosh@example.com" class="btn-primary">✉ Email Me</a>
+            <a href="https://wa.me/919579886683" target="_blank" class="btn-secondary">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="socials-list">
+          <a href="https://www.instagram.com/sudeepp_22" target="_blank" class="social-link"><span>Instagram</span><span class="social-arrow">↗</span></a>
+          <a href="https://www.linkedin.com/in/sudeep-ghosh-b85596312" target="_blank" class="social-link"><span>LinkedIn</span><span class="social-arrow">↗</span></a>
+          <a href="https://github.com/SudeepDeCode" target="_blank" class="social-link"><span>GitHub</span><span class="social-arrow">↗</span></a>
+          <a href="https://www.facebook.com/share/1AAvf1p35J/" target="_blank" class="social-link"><span>Facebook</span><span class="social-arrow">↗</span></a>
+          <a href="https://x.com/Sudeepghoshx" target="_blank" class="social-link"><span>X (Twitter)</span><span class="social-arrow">↗</span></a>
+          <a href="https://www.threads.net/@sudeepp_22" target="_blank" class="social-link"><span>Threads</span><span class="social-arrow">↗</span></a>
+          <a href="https://youtube.com/@sudeepp_22" target="_blank" class="social-link"><span>YouTube</span><span class="social-arrow">↗</span></a>
+          <a href="https://www.snapchat.com/add/sudeep_459m" target="_blank" class="social-link"><span>Snapchat</span><span class="social-arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Sudeep Ghosh</div>
+  <div class="footer-copy">© 2006 · Mumbai, India · All rights reserved</div>
+</footer>
+
+<script>
+  /* ===== THEME TOGGLE ===== */
+  const html = document.documentElement;
+  let isDark = true;
+
+  function toggleTheme() {
+    isDark = !isDark;
+    html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    const icon = isDark ? '☀️' : '🌙';
+    const label = isDark ? 'Light' : 'Dark';
+    const labelLong = isDark ? 'Light Mode' : 'Dark Mode';
+    document.getElementById('themeIcon').textContent = icon;
+    document.getElementById('themeLabel').textContent = label;
+    document.getElementById('themeIconMobile').textContent = icon;
+    document.getElementById('themeLabelMobile').textContent = labelLong;
+  }
+
+  /* ===== MOBILE MENU ===== */
+  const mobileMenu = document.getElementById('mobileMenu');
+  const hamburger = document.getElementById('hamburger');
+
+  function toggleMobileMenu() {
+    const isOpen = mobileMenu.classList.toggle('open');
+    mobileMenu.style.display = isOpen ? 'flex' : 'none';
+    hamburger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+    mobileMenu.style.display = 'none';
+    hamburger.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ===== CUSTOM CURSOR ===== */
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  if (window.matchMedia('(pointer: fine)').matches) {
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; });
+      el.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; });
+    });
+  }
+
+  /* ===== NAV SCROLL ===== */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  /* ===== REVEAL ON SCROLL ===== */
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(r => observer.observe(r));
+
+  /* ===== STAGGER CERT CARDS ===== */
+  document.querySelectorAll('.cert-card').forEach((card, i) => {
+    card.style.transitionDelay = (i * 0.06) + 's';
+  });
+</script>
+</body>
+</html>
